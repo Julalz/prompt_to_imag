@@ -3,8 +3,9 @@ import base64
 import random
 import time
 import os
-from googletrans import Translator
+
 from dotenv import load_dotenv
+from deep_translator import GoogleTranslator
 
 
 def image_file_to_base64(image_path):
@@ -23,10 +24,18 @@ def image_url_to_base64(image_url):
     return base64.b64encode(image_data).decode("utf-8")
 
 
-async def translate_prompt(prompt, src_lang="es", dest_lang="en"):
-    translator = Translator()
-    translated = await translator.translate(prompt, src=src_lang, dest=dest_lang)
-    return translated.text
+
+
+
+
+def translate_prompt(prompt, src_lang="es", dest_lang="en"):
+    translator = GoogleTranslator(source=src_lang, target=dest_lang)
+    translated = translator.translate(prompt)
+    print(f"Traducción: {translated}")
+    return translated
+
+
+
 
 
 load_dotenv()
@@ -36,14 +45,15 @@ url = "https://api.segmind.com/v1/ideogram-txt-2-img"
 
 
 spanish_prompt = (
-    "dame un post para instagram una pizzeria, una mesa con una pizza recien horneada"
+    "dame un un gato egipcion de color negro encima de una moto custom"
 )
-spanish_prompt2 = "debe de tener un fondo tipico de restaurante italiano con una botella de vino etiqueta sin nombre"
+spanish_prompt2 = "el fondo debe de estar estilo carretera con un bosque"
 
 
 english_prompt = translate_prompt(spanish_prompt)
 english_prompt2 = translate_prompt(spanish_prompt2)
-combined_prompt = f"{english_prompt}\n{english_prompt2}"
+combined_prompt = f"{english_prompt} + {english_prompt2}"
+
 
 random_seed = generate_random_seed()
 
@@ -58,7 +68,7 @@ data = {
 
 headers = {"x-api-key": api_key}
 
-response = requests.post(url, json=data, headers=headers)
+response =  requests.post(url, json=data, headers=headers)
 
 if response.status_code == 200:
     print("La imagen fue generada exitosamente.")
