@@ -1,2 +1,8 @@
 .env
 generateImageEntorno/
+
+*.log
+*.pkl
+*.h5
+/data/
+/models/
